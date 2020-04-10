@@ -25,7 +25,6 @@ class Server {
     const MONGO_URI: string | undefined = process.env.MONGO_URI;
 
     if (typeof MONGO_URI === 'undefined') throw new Error('NO MONGO URI')
-
     connect(MONGO_URI);
     // Settings
     this.app.set('port', process.env.PORT || 3000);
