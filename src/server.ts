@@ -42,7 +42,9 @@ class Server {
   public routes(): void {
     const router: express.Router = express.Router();
 
-    // this.app.use('/', indexRoutes);
+    this.app.use('/', (req, res) => {
+      res.send(true)
+    });
     // this.app.use('/api/users', UserRoutes);
   }
 
