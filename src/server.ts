@@ -3,8 +3,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
-import mongoose from 'mongoose';
-
+import connect from './db/connection';
 // import routes
 // import indexRoutes from './routes/indexRoutes';
 // import UserRoutes from './routes/UserRoutes';
@@ -20,12 +19,9 @@ class Server {
     }
 
     public config(): void {
-        const MONGO_URI = `mongodb+srv://dbuserTaxApi:TaxApi2k2@cluster0-u7dip.mongodb.net/test?retryWrites=true&w=majority`;
-        mongoose.set('useFindAndModify', false);
-        mongoose.connect(MONGO_URI || process.env.MONGODB_URL, {
-            useNewUrlParser: true,
-            useCreateIndex: true
-        });
+        const MONGO_URI:string = process.env.MONGO_URI || `mongodb+srv://dbuserTaxApi:TaxiApi2k2@cluster0-u7dip.mongodb.net/test?retryWrites=true&w=majority`;
+
+        connect(MONGO_URI);
         // Settings
         this.app.set('port', process.env.PORT || 3000);
         // middlewares
