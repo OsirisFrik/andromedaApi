@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+- 12.16.1
+script:
+  - yarn build
+deploy:
+  skyp_cleanup: true
+  provider: heroku
+  app: andromeda-hack
+  on:
+    branch: master
+  api_key:
+    secure: OMCdSz0r2W7mKRFVK3N4l0v38tIQU35va1Ag/NDZSIRfkRkda1UHp+2JhAMbu5z1syVAsB97RRVPWapOzftWSZ3LcVLjrGzuCuh2BIZn/ASYixtN7Ply2IUPAcaUxPn1WsvAGTNBiuaUyDKCMQJheKfgQmi4M+cyqcjufBGaWS8b0K/zAGy0kkDAMIOYb0Motxg0v702jqK8Gtl5BSBHOrcAddjuRcikGyd97iBltpOBvfUB+kVug6ql2+mpgVO5Q6I44A80M5ixtMBpB69s6dP6JzgeF0mvZPay6IYEe3eH7M8z0fbk0vMLuPJkK3RRPDxrvnAS2heGxIzLBXosdsZ4MwhOngpIljKkAFh5m19ILhIF4I5gnz7e60wdUjmOMXyKjOZ4Tw7WJk//O9E8hV5OS2O9AnJ3nbPgde03Lyxlwy1EfuiYitv6cP3eaE0snhC/0Qx+nPBwnfdkRvDWm9jHKpjhhhTdWeyvOCsAcDCl7Pp7lly1elB0WQuh5T6SBAIMajnj78UEGNdQeMFvvB01PVK4KGAjHylHecYw/Yk1B//jg4449COXD/PiE4FRK/QyquIofgwpWbsUqObIIVNbo81646A+EuypgdpG55Wkq1VnJ3YYdiJhqMmSVMEa4+CA0n3DgXLcfhXFN4IMwW3xp7FB0pVrRauvwWy5eIs=
