@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express, {Application, Router} from 'express';
 import morgan from 'morgan';
 import compression from 'compression';
@@ -8,6 +9,8 @@ import connect from './db/connection';
 // import routes
 // import indexRoutes from './routes/indexRoutes';
 import UserRoutes from './routes/userRoutes';
+
+dotenv.config()
 
 // Server Class
 class Server {
@@ -20,7 +23,9 @@ class Server {
     }
 
     public config(): void {
-        const MONGO_URI:string = process.env.MONGO_URI || `mongodb+srv://dbuserTaxApi:TaxiApi2k2@cluster0-u7dip.mongodb.net/test?retryWrites=true&w=majority`;
+        const MONGO_URI:string | undefined = process.env.MONGO_URI;
+
+        if (typeof MONGO_URI === 'undefined') throw new Error('NO MONGO_URI')
 
         connect(MONGO_URI);
         // Settings
@@ -37,7 +42,7 @@ class Server {
     public routes(): void {
         const router: Router = express.Router();
 
-        // this.app.use('/', indexRoutes);
+        this.app.use('/', (req, res) => res.send(true));
         this.app.use('/api/users', new UserRoutes().router);
     }
 
