@@ -1,16 +1,17 @@
-import express from 'express';
+import express, {Application, Router} from 'express';
 import morgan from 'morgan';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import connect from './db/connection';
+
 // import routes
 // import indexRoutes from './routes/indexRoutes';
-// import UserRoutes from './routes/UserRoutes';
+import UserRoutes from './routes/userRoutes';
 
 // Server Class
 class Server {
-    public app: express.Application;
+    public app: Application;
 
     constructor() {
         this.app = express();
@@ -34,10 +35,10 @@ class Server {
     }
 
     public routes(): void {
-        const router: express.Router = express.Router();
+        const router: Router = express.Router();
 
         // this.app.use('/', indexRoutes);
-        // this.app.use('/api/users', UserRoutes);
+        this.app.use('/api/users', new UserRoutes().router);
     }
 
     public start(): void {
