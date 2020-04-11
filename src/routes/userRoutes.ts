@@ -15,6 +15,5 @@ export default class UserRoutes {
     routes() {
         this.router.post("/register", this.userController.registerUser);
         this.router.post("/login", this.userController.authenticateUser);
-        this.router.post('/logout', this.Auth.Authenticate, this.userController.logout)
     }
 }

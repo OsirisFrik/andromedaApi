@@ -9,6 +9,7 @@ import connect from './db/connection';
 // import routes
 // import indexRoutes from './routes/indexRoutes';
 import UserRoutes from './routes/userRoutes';
+import ProductRoutes from './routes/productRoutes';
 
 dotenv.config()
 
@@ -42,8 +43,9 @@ class Server {
     public routes(): void {
         const router: Router = express.Router();
 
-        this.app.use('/', (req, res) => res.send(true));
+        this.app.get('/', (req, res) => res.send(true));
         this.app.use('/api/users', new UserRoutes().router);
+        this.app.use('/api/products', new ProductRoutes().router);
     }
 
     public start(): void {
