@@ -6,11 +6,16 @@ import {
   Types
 } from 'mongoose';
 
+interface ILoc {
+  type: String;
+  coordinates: Array<Number>;
+}
+
 interface IAddressSchema extends Document {
   user: Types.ObjectId;
   address: String;
   zipCode: String;
-  coords: [Number];
+  loc: ILoc;
   createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
@@ -59,16 +64,19 @@ AddressSchema.methods.findByUser = async (user: string | Types.ObjectId): Promis
   return address;
 }
 
-AddressSchema.methods.findNearProviders = async (coords: Array<number>, maxDist: number = 2000): Promise<Array<IAddress>> => {
-  let providers = await Address.find({
+AddressSchema.methods.findNearProviders = async (address: IAddress, maxDist: number = 2000): Promise<Array<IAddress>> => {
+  let providers: Array<IAddress> = await Address.find({
     loc: {
       $near: {
         $geometry: {
           type: 'Point',
-          coordinates: coords.reverse()
+          coordinates: address.loc.coordinates
         },
         $maxDistance: maxDist
       }
+    },
+    user: {
+      $ne: address.user
     }
   });
 
