@@ -3,7 +3,7 @@ import {
   Schema,
   Document,
   Model,
-  Types
+	Types
 } from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -13,8 +13,21 @@ interface IUserSchema extends Document {
   name: string;
   email: string;
   password: string;
-  tokens ? : Types.Array < object > ;
+  tokens: Types.Array<ITokens>
 }
+export interface ITokens extends Types.Subdocument {
+	_id: Types.ObjectId;
+	token: string;
+}
+
+
+const tokenSchema = new Schema({
+	_id: Types.ObjectId,
+	token: {
+		type: String,
+		required: true
+	}
+});
 
 const userSchema = new Schema({
   name: {
@@ -32,13 +45,9 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
-    }
-  }]
+  tokens: [tokenSchema]
 });
+
 
 userSchema.statics.findByCredentials = async (email: string, password: string) => {
   const user = await User.findOne({

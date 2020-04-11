@@ -23,4 +23,17 @@ export class UserController {
 				res.status(400).send()
 		}
 	}
+
+	public logout(req: Request, res: Response, next: NextFunction) {
+		try {
+			req.user.tokens = req.user.tokens.filter((token: string) => {
+				return token.token !== req.token;
+			})
+			await req.user.save();
+
+			res.send()
+		} catch (e) {
+			res.status(500).send();
+		}
+	}
 }

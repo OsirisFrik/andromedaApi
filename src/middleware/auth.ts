@@ -4,7 +4,7 @@ import User from '../models/users';
 
 export class Auth{
 	
-	public Authenticate = async  (req: Request, res: Response, next: NextFunction) => {
+	public async Authenticate (req: Request, res: Response, next: NextFunction) {
 		try {
 			const token = req.header('Authorization');
 			if(!token) throw new Error();
@@ -13,13 +13,13 @@ export class Auth{
 			const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
 
 			if (!user) {
-					throw new Error()
+					throw new Error();
 			}
 			req.token = token;
 			req.user = user;
-			next()
+			next();
 		} catch (e) {
-				res.status(401).send({ error: 'Please authenticate.' })
+				res.status(401).send({ error: 'Please authenticate.' });
 		}
 	}
 }		
