@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { Response, Request, NextFunction } from "express";
+import {
+  Response,
+  Request,
+  NextFunction
+} from "express";
 import User from '../models/users';
 
 export class Auth{
@@ -10,7 +14,10 @@ export class Auth{
 			if(!token) throw new Error();
 			token = token.replace('Bearer ', "");
 			let decoded = <any>jwt.verify(token, process.env.SECRET!);
-			let user = await User.findOne({_id:decoded._id, tokens: token });
+			let user = await User.findOne({
+				_id:decoded._id, 
+				tokens: token 
+			});
 
 			if (!user) {
 					throw new Error();
@@ -19,7 +26,9 @@ export class Auth{
 			req.user = user;
 			next();
 		} catch (e) {
-			res.status(401).send({ error: 'Please authenticate.' });
+			res.status(401).send({ 
+				error: 'Please authenticate.' 
+			});
 		}
 	}
 }		

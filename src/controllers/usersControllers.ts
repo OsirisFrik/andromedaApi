@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import User from '../models/users';
-import { token } from "morgan";
+import User, { IUser } from '../models/users';
+import Address, { IAddress } from "../models/addresses";
 
 export class UserController {
   public async registerUser(req: Request, res: Response): Promise < void > {
-    const user = new User(req.body);
+    let user = new User(req.body);
     try {
-			await user.save();
-			const token = await user.generateAuthToken();
+      await user.save()
+      let token = await user.generateAuthToken();
       res.status(201).send({
         user,
         token
@@ -17,10 +17,10 @@ export class UserController {
     }
   }
 
-  public async authenticateUser(req: Request, res: Response, next: NextFunction) {
+  public async authenticateUser(req: Request, res: Response) {
     try {
-      const user = await User.findByCredentials(req.body.email, req.body.password);
-      const token = await user.generateAuthToken();
+      let user = await User.findByCredentials(req.body.email, req.body.password);
+      let token = await user.generateAuthToken();
       res.send({
         user,
         token
@@ -44,7 +44,57 @@ export class UserController {
 	/**
 	 * getCurrentUser
 	 */
-	public async getCurrentUser(req: Request, res: Response, next: NextFunction){
+	public async getProfile(req: Request, res: Response, next: NextFunction){
 		return res.status(200).send(req.user);
 	}
+
+  // public async getProfile(req: Request, res: Response) {
+  //   try {
+  //     let user: IUser = req.user!
+      
+  //     res.send({
+  //       user: await User.findById(user._id, { __v: false, tokens: false })
+  //     });
+  //   } catch (err) {
+  //     res.status(500).send(err);
+  //   }
+  // } 
+
+  public async addAddress(req: Request, res: Response) {
+    try {
+      let user: IUser = req.user!;
+      let body = req.body;
+      let data = {
+        ...body,
+        user: user._id,
+        loc: {
+          coordinates: body.coordinates.reverse()
+        }
+      }
+      console.log(data)
+      let address = new Address(data);
+      await address.save();
+
+      res.send(address.toJSON());
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
+
+  public async updateAddress(req: Request,  res: Response) {
+    try {
+      let user: IUser = req.user!;
+      let address: IAddress = await Address.findByUser(user._id);
+      let data: IAddress = {
+        ...req.body,
+        updatedAt: new Date()
+      };
+
+      await address.update(data);
+
+      res.send({ address: await Address.findById(address._id) });
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
 }
