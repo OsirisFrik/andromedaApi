@@ -45,12 +45,16 @@ export class UserController {
   public async addAddress(req: Request, res: Response) {
     try {
       let user: IUser = req.user!;
-      let data = req.body;
-      let address = new Address({
+      let body = req.body;
+      let data = {
+        ...body,
         user: user._id,
-        ...data
-      });
-
+        loc: {
+          coordinates: body.coordinates.reverse()
+        }
+      }
+      console.log(data)
+      let address = new Address(data);
       await address.save();
 
       res.send(address.toJSON());
