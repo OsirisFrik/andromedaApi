@@ -11,7 +11,7 @@ import connect from './db/connection';
 import UserRoutes from './routes/userRoutes';
 import ProductRoutes from './routes/productRoutes';
 
-dotenv.config()
+dotenv.config();
 
 // Server Class
 class Server {

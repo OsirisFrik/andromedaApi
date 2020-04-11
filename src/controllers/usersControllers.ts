@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import User from '../models/users';
+import { token } from "morgan";
 
 export class UserController {
   public async registerUser(req: Request, res: Response): Promise < void > {
     const user = new User(req.body);
     try {
-      await user.save()
-      const token = await user.generateAuthToken();
+			await user.save();
+			const token = await user.generateAuthToken();
       res.status(201).send({
         user,
         token
@@ -25,7 +26,25 @@ export class UserController {
         token
       });
     } catch (e) {
-      res.status(400).send()
+      res.status(400).send();
     }
-  }
+	}
+	public async logout(req: Request, res: Response, next: NextFunction){
+		try {
+			if(!req.user || !req.user.tokens) throw new Error("Auth");
+				req.user.tokens = <any>req.user.tokens.filter(function(token){
+				return token !== req.token;
+			});
+			await req.user.save();
+			res.send("Successfully logged out");
+		} catch (error) {
+			res.status(500).send("Error on logout");
+		}
+	}
+	/**
+	 * getCurrentUser
+	 */
+	public async getCurrentUser(req: Request, res: Response, next: NextFunction){
+		return res.status(200).send(req.user);
+	}
 }
