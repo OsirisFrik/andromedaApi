@@ -7,11 +7,7 @@
     "start": "node 'dist/server.js'",
     "build": "tsc -p .",
     "dev": "npm run build:dev",
-<<<<<<< HEAD
     "build:dev": "nodemon --inspect --exec \"ts-node src/server.ts -e ts\"",
-=======
-    "build:dev": "nodemon --inspect src/server.ts",
->>>>>>> 53a25b44b64a54b9e310d40d6dda4dfaaed3a482
     "test": "jest"
   },
   "dependencies": {
