@@ -26,21 +26,39 @@ export class UserController {
         token
       });
     } catch (e) {
-      res.status(400).send()
+      res.status(400).send();
     }
-  }
+	}
+	public async logout(req: Request, res: Response, next: NextFunction){
+		try {
+			if(!req.user || !req.user.tokens) throw new Error("Auth");
+				req.user.tokens = <any>req.user.tokens.filter(function(token){
+				return token !== req.token;
+			});
+			await req.user.save();
+			res.send("Successfully logged out");
+		} catch (error) {
+			res.status(500).send("Error on logout");
+		}
+	}
+	/**
+	 * getCurrentUser
+	 */
+	public async getProfile(req: Request, res: Response, next: NextFunction){
+		return res.status(200).send(req.user);
+	}
 
-  public async getProfile(req: Request, res: Response) {
-    try {
-      let user: IUser = req.user!
+  // public async getProfile(req: Request, res: Response) {
+  //   try {
+  //     let user: IUser = req.user!
       
-      res.send({
-        user: await User.findById(user._id, { __v: false, tokens: false })
-      });
-    } catch (err) {
-      res.status(500).send(err);
-    }
-  } 
+  //     res.send({
+  //       user: await User.findById(user._id, { __v: false, tokens: false })
+  //     });
+  //   } catch (err) {
+  //     res.status(500).send(err);
+  //   }
+  // } 
 
   public async addAddress(req: Request, res: Response) {
     try {
