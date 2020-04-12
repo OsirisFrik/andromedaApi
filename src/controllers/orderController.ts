@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import Order, {IOrder} from '../models/orders';
-import Address from '../models/addresses';
-import User from '../models/users';
 
 export default class OrderController {
 	public async getOrders(req: Request, res: Response){
@@ -70,31 +68,5 @@ export default class OrderController {
 				message: "Bad Request"
 			});
 		}
-  }
-  
-  public async ordersToProvider(req: Request, res: Response) {
-    try {
-      let provider = req.user!;
-      let providerAddress = await Address.findOne({ user: provider._id });
-      let orders: IOrder[] = [];
-
-      if (!providerAddress) return res.status(401).send({
-        error: 'user don\'t have address'
-      });
-      let nearAddresses = await Address.findNearUsers(providerAddress, 2000);
-      
-      for (let i = 0; i < nearAddresses.length; i++) {
-        const address = nearAddresses[i];
-        if (address.user instanceof User) {
-          let userOrders = await Order.findOrdersByUser(address.user._id);
-          orders.push(...userOrders);
-        }
-      }
-      
-      res.send(orders);
-    } catch (err) {
-      console.trace(err);
-      res.status(500).send(err);
-    }
-  }
+	}
 }

@@ -55,7 +55,7 @@ const orderSchema:Schema = new Schema({
     }
 }, {versionKey: false});
 
-orderSchema.statics.findOrdersByUser = async(user: Types.ObjectId , typeUser: string = 'owner'):Promise<Array<IOrder>> => {
+orderSchema.methods.findOrdersByUser = async(user: Types.ObjectId , typeUser: string = 'owner'):Promise<Array<IOrder>> => {
 	// let query = {
 	//     property: typeUser,
 	//     value: user

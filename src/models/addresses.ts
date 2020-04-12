@@ -1,5 +1,10 @@
-import { model, Schema, Document, Model, Types } from 'mongoose';
-import User, { IUser } from './users';
+import {
+  model,
+  Schema,
+  Document,
+  Model,
+  Types
+} from 'mongoose';
 
 interface ILoc {
   type: String;
@@ -7,7 +12,7 @@ interface ILoc {
 }
 
 interface IAddressSchema extends Document {
-  user: IUser | Types.ObjectId;
+  user: Types.ObjectId;
   address: String;
   zipCode: String;
   loc: ILoc;
@@ -59,7 +64,7 @@ AddressSchema.methods.findByUser = async (user: string | Types.ObjectId): Promis
   return address;
 }
 
-AddressSchema.statics.findNearProviders = async (address: IAddress, maxDist: number = 2000): Promise<Array<IAddress>> => {
+AddressSchema.methods.findNearProviders = async (address: IAddress, maxDist: number = 2000): Promise<Array<IAddress>> => {
   let providers: Array<IAddress> = await Address.find({
     loc: {
       $near: {
@@ -73,52 +78,16 @@ AddressSchema.statics.findNearProviders = async (address: IAddress, maxDist: num
     user: {
       $ne: address.user
     }
-  }).populate('user').exec();
-
-  providers = providers.filter(item => {
-    if (item.user instanceof User) {
-      return item.user.provider;
-    }
-
-    return false;
-  })
-
-  return providers;
-}
-
-AddressSchema.statics.findNearUsers = async (address: IAddress, maxDist: number = 2000): Promise<Array<IAddress>> => {
-  let addresses = await Address.find({
-    loc: {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: address.loc.coordinates
-        },
-        $maxDistance: maxDist
-      }
-    },
-    user: {
-      $ne: address.user
-    }
-  }).populate('user').exec();
-
-  addresses = addresses.filter(item => {
-    if (item.user instanceof User) {
-      return !item.user.provider;
-    }
-
-    return false;
   });
 
-  return addresses;
-}
+  return providers;
+} 
 
 export interface IAddress extends IAddressSchema {}
 
 export interface IAddressModel extends Model <IAddress> {
   findByUser(user: string | Types.ObjectId): IAddress;
-  findNearProviders(address: IAddress, maxDist: number): Promise<Array<IAddress>>;
-  findNearUsers(address: IAddress, maxDist: number): Promise<Array<IAddress>>;
+  findNearProviders(coords: Array<number>, maxDist: number): Promise<Array<IAddress>>;
 }
 
 const Address = model<IAddress, IAddressModel>('Address', AddressSchema);

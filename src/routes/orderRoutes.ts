@@ -17,6 +17,5 @@ export default class OrderRoutes {
         this.router.put('/:id/asign', this.auth.Authenticate, this.orderController.asignProvider);
 
         this.router.get('/', this.auth.Authenticate, this.orderController.getOrders);
-        this.router.get('/provider', this.auth.Authenticate, this.auth.isProvider, this.orderController.ordersToProvider);
     }
 }
