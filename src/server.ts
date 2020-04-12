@@ -7,9 +7,9 @@ import cors from 'cors';
 import connect from './db/connection';
 
 // import routes
-// import indexRoutes from './routes/indexRoutes';
 import UserRoutes from './routes/userRoutes';
 import ProductRoutes from './routes/productRoutes';
+import OrderRoutes from './routes/orderRoutes';
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ dotenv.config();
 class Server {
     public app: Application;
 
-    constructor() {
+    constructor() { 
         this.app = express();
         this.config();
         this.routes();
@@ -41,11 +41,12 @@ class Server {
     }
 
     public routes(): void {
-        const router: Router = express.Router();
+        // const router: Router = express.Router();
 
         this.app.get('/', (req, res) => res.send(true));
         this.app.use('/api/users', new UserRoutes().router);
         this.app.use('/api/products', new ProductRoutes().router);
+        this.app.use('/api/orders', new OrderRoutes().router);
     }
 
     public start(): void {

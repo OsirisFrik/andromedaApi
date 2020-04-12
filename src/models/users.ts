@@ -109,7 +109,20 @@ userSchema.methods.generateAuthToken = async function (): Promise < String > {
 userSchema.virtual('fullName').get(function(this: {firstName: String, lastName: String}){
 	return this.firstName + " " + this.lastName;
 });
+//for population
+userSchema.virtual('myOrders', {
+	ref: 'Orders',
+	localField: '_id',
+	foreignField: 'owner',
+	justOne: true
+});
 
+userSchema.virtual('theirOrders', {
+	ref: 'User',
+	localField: '_id',
+	foreignField: 'provider',
+	justOne: true
+});
 export interface IUser extends IUserSchema {
   generateAuthToken(): Promise < string > ;
   toJSON(): Object;

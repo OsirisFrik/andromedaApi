@@ -7,6 +7,20 @@ import {
   } from 'mongoose';
 import moment from 'moment';
 
+interface items extends Document{
+	product: Types.ObjectId;
+	quantity: number;
+	maxPrice: number;	
+}
+const itemSchema: Schema = new Schema({
+	product: {
+		type: Types.ObjectId,
+		required: true
+	},
+	quantity: Number,
+	maxPrice: Number
+}, {_id: false});
+
 const orderSchema:Schema = new Schema({
     owner: {
         type: Types.ObjectId,
@@ -18,10 +32,7 @@ const orderSchema:Schema = new Schema({
         required: false,
         ref: 'User'
     },
-    listDetails: {
-        type: Types.ObjectId,
-        required: false
-    },
+    items:[itemSchema],
     expiresAt: {
         type: Date,
         default: () => {
@@ -30,26 +41,36 @@ const orderSchema:Schema = new Schema({
     },
     status: {
         type: String,
-        enum: ['created','looking','inProgress', 'Done', 'Delivered'],
+        enum: ['created','looking','inProgress', 'Delivered', 'cancel'],
         default: 'created'
     }
-});
+}, {versionKey: false});
 
-interface IOrder extends Document{
-    owner: Types.ObjectId;
-    provider: Types.ObjectId;
-    listDetails: Types.ObjectId;
-    expiresAt: Date;
-    status: string;
+
+interface IOrderSchema extends Document{
+	owner: Types.ObjectId;
+	provider: Types.ObjectId;
+	listDetails: [items];
+	expiresAt: Date;
+	status: string;
 }
-//for population
-orderSchema.virtual('owner', {
-    ref: '',
-    localField: '',
-    foreignField: '',
-    justOne: true
-});
 
-const Order: Model<IOrder> = model < IOrder >("Order", orderSchema);
+
+orderSchema.methods.findOrdersByUser = async(user: Types.ObjectId , typeUser: string = 'owner'):Promise<Array<IOrder>> => {
+	// let query = {
+	//     property: typeUser,
+	//     value: user
+	// }
+	let orders: Array<IOrder> = await Order.find({owner: user});
+	console.log(orders);
+	return orders;
+}
+
+export interface IOrder extends IOrderSchema{}
+export interface IOrderModel extends Model < IOrder > {
+	findOrdersByUser(user: Types.ObjectId, typeUser?: String):Promise<Array<IOrder>>;
+}
+
+const Order = model < IOrder, IOrderModel >("Order", orderSchema);
 
 export default Order;
