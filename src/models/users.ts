@@ -21,6 +21,7 @@ interface IUserSchema extends Document {
 	provider: boolean;
   tokens:[string];
   devices: [string];
+  fullName: string;
 }
 
 

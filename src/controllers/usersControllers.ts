@@ -39,7 +39,7 @@ export class UserController {
       res.status(400).send();
     }
 	}
-	public async logout(req: Request, res: Response, next: NextFunction){
+	public async logout(req: Request, res: Response){
 		try {
 			if(!req.user || !req.user.tokens) throw new Error("Auth");
 				req.user.tokens = <any>req.user.tokens.filter(function(token){
@@ -128,7 +128,7 @@ export class UserController {
         await notifications.sendNotification(user.devices, {
           notification: {
             title: 'Test',
-            body: `Hi ${user.name}`
+            body: `Hi ${user.fullName}`
           }
         }, {});
         return res.send(true);
