@@ -155,7 +155,6 @@ export interface IUserModel extends Model < IUser > {
 // userSchema.methods.validatePassword = async function(password: string):Promise<boolean>{
 //     return await bcrypt.compare(password, this.password);
 // }
-const User = model < IUser,
-  IUserModel > ("User", userSchema);
+const User = model < IUser, IUserModel > ("User", userSchema);
 
 export default User;

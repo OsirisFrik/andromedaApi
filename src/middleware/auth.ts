@@ -30,5 +30,19 @@ export class Auth{
 				error: 'Please authenticate.' 
 			});
 		}
-	}
+  }
+  
+  public async isProvider(req: Request, res: Response, next: NextFunction) {
+    try {
+      let user = req.user!;
+
+      if (user.provider) return next();
+
+      res.status(401).send({
+        error: 'Not a provider user'
+      });
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
 }		
