@@ -14,6 +14,7 @@ export default class OrderRoutes {
         this.router.post('/add', this.auth.Authenticate, this.orderController.createOrder);
         
         this.router.put('/:id/status', this.auth.Authenticate, this.orderController.updateOrderStatus);
+        this.router.put('/:id/asign', this.auth.Authenticate, this.orderController.asignProvider);
 
         this.router.get('/', this.auth.Authenticate, this.orderController.getOrders);
     }

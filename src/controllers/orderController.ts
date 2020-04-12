@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import Order, {IOrder} from '../models/orders';
-import { IUser } from '../models/users';
 
 export default class OrderController {
 	public async getOrders(req: Request, res: Response){
@@ -9,9 +8,7 @@ export default class OrderController {
 			let orders = await Order.find({owner: req.user._id});
 
 			res.send(orders);
-
 		} catch (e) {
-			console.log(e);
 			res.status(400).send(e);
 		}
 	}
@@ -33,15 +30,38 @@ export default class OrderController {
 	public async updateOrderStatus(req: Request, res: Response){
 		try {
 			let filter  = {_id: req.params.id};
-			let update = {status: req.body.status}
-			let order = await Order.findOneAndUpdate(filter,update, {runValidators: true});
-			res.send(order);
+			let update = {status: req.body.status};
+
+			if(!filter._id || !update.status) throw new Error();
+
+			await Order.findOneAndUpdate(filter, update, {runValidators: true});
+
+			res.send("Updated successfully");
 			// if(order === null){
 			// 	return res.status(200).send('There is not an Order with that ID');
 			// }
 		} catch (e) {
-			res.status(400).send(e)
+			res.status(400).send({
+				error: e,
+				message: "Bad Request"
+			});
 		}
 	}
 
+	public async asignProvider(req: Request, res: Response){
+		try {
+			if(!req.user) throw new Error();
+			let filter = {_id: req.params.id};
+			let update = {provider: req.user._id};
+			
+			await Order.findOneAndUpdate(filter,update, {runValidators: true});
+
+			res.send("User successfully asign");
+		} catch (e) {	
+			res.status(400).send({
+				error: e,
+				message: "Bad Request"
+			});
+		}
+	}
 }
