@@ -3,26 +3,49 @@ import {
   Schema,
   Document,
   Model,
-  Types
+	Types
 } from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 interface IUserSchema extends Document {
   _id: Types.ObjectId;
-  name: string;
+	firstName: string;
+	lastName: string;
+	age: number;
+	inapam?: string;
+	inapamValidated?: boolean;
+	phone?: string;
   email: string;
-  password: string;
-  tokens ? : Types.Array < object > ;
-  devices: Types.Array<string>;
+	password: string;
+	provider: boolean;
+  tokens:[string];
+  devices: [string];
 }
 
-const userSchema = new Schema({
-  name: {
+
+
+const userSchema: Schema = new Schema({
+  firstName: {
     type: String,
     required: true,
     trim: true
-  },
+	},
+	lastName:{
+		type: String,
+		required: true,
+		trim: true
+	},
+	age: {
+		type: Number,
+		min: 12,
+		required: true
+	},
+	phone: {
+		type: String,
+		required: false,
+		trim: true
+	},
   email: {
     type: String,
     trim: true,
@@ -31,18 +54,16 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
-  },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
-    }
-  }],
-  devices: [{
-    type: String
-  }]
-});
+		required: true,
+		minlength: 4
+	},
+	provider: {
+		type: Boolean,
+		default: false
+	},
+	tokens: [String],
+	devices: [String]
+},{versionKey:false});
 
 userSchema.statics.findByCredentials = async (email: string, password: string) => {
   const user = await User.findOne({
@@ -63,11 +84,14 @@ userSchema.statics.findByCredentials = async (email: string, password: string) =
 }
 
 userSchema.methods.toJSON = function (): Object {
-  const user = this
+  const user = this;
   const userObject = user.toObject();
 
   delete userObject.password;
-  delete userObject.tokens;
+	delete userObject.tokens;
+	delete userObject.firstName;
+	delete userObject.lastName;
+	userObject.fullName = this.fullName;
 
   return userObject;
 }
@@ -77,13 +101,15 @@ userSchema.methods.generateAuthToken = async function (): Promise < String > {
     _id: user._id.toString()
   }, process.env.SECRET!);
 
-  user.tokens = user.tokens.concat({
-    token
-  });
+  user.tokens.push(token);
   await user.save();
 
   return token;
 }
+
+userSchema.virtual('fullName').get(function(this: {firstName: String, lastName: String}){
+	return this.firstName + " " + this.lastName;
+});
 
 export interface IUser extends IUserSchema {
   generateAuthToken(): Promise < string > ;
@@ -91,7 +117,7 @@ export interface IUser extends IUserSchema {
 }
 
 userSchema.pre < IUser > ('save', async function (next) {
-  const user = this;
+	const user = this;
 
   if (!user.isModified('password')) return next();
 
