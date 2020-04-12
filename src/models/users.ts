@@ -20,6 +20,8 @@ interface IUserSchema extends Document {
 	password: string;
 	provider: boolean;
   tokens:[string];
+  devices: [string];
+  fullName: string;
 }
 
 
@@ -61,7 +63,7 @@ const userSchema: Schema = new Schema({
 		default: false
 	},
 	tokens: [String],
-	
+	devices: [String]
 },{versionKey:false});
 
 userSchema.statics.findByCredentials = async (email: string, password: string) => {

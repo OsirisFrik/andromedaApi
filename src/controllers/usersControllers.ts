@@ -1,6 +1,16 @@
-import { Request, Response, NextFunction } from "express";
-import User, { IUser } from '../models/users';
-import Address, { IAddress } from "../models/addresses";
+import {
+  Request,
+  Response
+} from "express";
+import User, {
+  IUser
+} from '../models/users';
+import Address, {
+  IAddress
+} from "../models/addresses";
+import Notifications from '../libs/pushNotifications';
+
+const notifications: Notifications = new Notifications();
 
 export class UserController {
   public async registerUser(req: Request, res: Response): Promise < void > {
@@ -29,7 +39,7 @@ export class UserController {
       res.status(400).send();
     }
 	}
-	public async logout(req: Request, res: Response, next: NextFunction){
+	public async logout(req: Request, res: Response){
 		try {
 			if(!req.user || !req.user.tokens) throw new Error("Auth");
 				req.user.tokens = <any>req.user.tokens.filter(function(token){
@@ -41,24 +51,21 @@ export class UserController {
 			res.status(500).send("Error on logout");
 		}
 	}
-	/**
-	 * getCurrentUser
-	 */
-	public async getProfile(req: Request, res: Response, next: NextFunction){
-		return res.status(200).send(req.user);
-	}
 
-  // public async getProfile(req: Request, res: Response) {
-  //   try {
-  //     let user: IUser = req.user!
-      
-  //     res.send({
-  //       user: await User.findById(user._id, { __v: false, tokens: false })
-  //     });
-  //   } catch (err) {
-  //     res.status(500).send(err);
-  //   }
-  // } 
+  public async getProfile(req: Request, res: Response) {
+    try {
+      let user: IUser = req.user!
+
+        res.send({
+          user: await User.findById(user._id, {
+            __v: false,
+            tokens: false
+          })
+        });
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
 
   public async addAddress(req: Request, res: Response) {
     try {
@@ -81,7 +88,7 @@ export class UserController {
     }
   }
 
-  public async updateAddress(req: Request,  res: Response) {
+  public async updateAddress(req: Request, res: Response) {
     try {
       let user: IUser = req.user!;
       let address: IAddress = await Address.findByUser(user._id);
@@ -92,7 +99,42 @@ export class UserController {
 
       await address.update(data);
 
-      res.send({ address: await Address.findById(address._id) });
+      res.send({
+        address: await Address.findById(address._id)
+      });
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
+
+  public async addTokenDevice(req: Request, res: Response) {
+    try {
+      let user = req.user!;
+      user.devices?.push(req.body.token);
+      await user.save();
+
+      res.status(200).send();
+    } catch (err) {
+      console.trace(err);
+      res.status(500).send(err);
+    }
+  }
+
+  public async testNotification(req: Request, res: Response) {
+    try {
+      let user = req.user!;
+
+      if (user.devices.length > 0) {
+        await notifications.sendNotification(user.devices, {
+          notification: {
+            title: 'Test',
+            body: `Hi ${user.fullName}`
+          }
+        }, {});
+        return res.send(true);
+      } else {
+        return res.status(400).send({ message: 'user don\'t have devices' });
+      }
     } catch (err) {
       res.status(500).send(err);
     }
