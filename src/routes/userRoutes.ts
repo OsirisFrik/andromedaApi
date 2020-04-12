@@ -23,5 +23,6 @@ export default class UserRoutes {
     this.router.post('/test-push', this.auth.Authenticate, this.userController.testNotification);
 
     this.router.put('/address', this.auth.Authenticate, this.userController.updateAddress);
+    this.router.put('/provider', this.auth.Authenticate, this.userController.updateProviderState);
   }
 }

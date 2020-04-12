@@ -139,4 +139,17 @@ export class UserController {
       res.status(500).send(err);
     }
   }
+
+  public async updateProviderState(req: Request, res: Response) {
+    try {
+      let user = req.user!;
+      
+      user.provider = req.body.provider;
+      await user.save();
+
+      res.status(200).send(user.toJSON());
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  }
 }
