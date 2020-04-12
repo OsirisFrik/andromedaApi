@@ -21,6 +21,15 @@ const itemSchema: Schema = new Schema({
 	maxPrice: Number
 }, {_id: false});
 
+
+interface IOrderSchema extends Document{
+	owner: Types.ObjectId;
+	provider: Types.ObjectId;
+	listDetails: [items];
+	expiresAt: Date;
+	status: string;
+}
+
 const orderSchema:Schema = new Schema({
     owner: {
         type: Types.ObjectId,
@@ -29,9 +38,9 @@ const orderSchema:Schema = new Schema({
     },
     provider: {
         type: Types.ObjectId,
-        required: false,
-        ref: 'User'
-    },
+				ref: 'User',
+				required: false			
+		},
     items:[itemSchema],
     expiresAt: {
         type: Date,
@@ -45,16 +54,6 @@ const orderSchema:Schema = new Schema({
         default: 'created'
     }
 }, {versionKey: false});
-
-
-interface IOrderSchema extends Document{
-	owner: Types.ObjectId;
-	provider: Types.ObjectId;
-	listDetails: [items];
-	expiresAt: Date;
-	status: string;
-}
-
 
 orderSchema.methods.findOrdersByUser = async(user: Types.ObjectId , typeUser: string = 'owner'):Promise<Array<IOrder>> => {
 	// let query = {

@@ -51,15 +51,20 @@ export default class OrderController {
 	public async asignProvider(req: Request, res: Response){
 		try {
 			if(!req.user) throw new Error();
-			let filter = {_id: req.params.id};
+			let order = <IOrder>await Order.findById(req.params.id);
 			let update = {provider: req.user._id};
+
+			if(order.owner.equals(update.provider)){
+				throw new Error("Can't set an owner as provider in the same Order");
+			}
 			
-			await Order.findOneAndUpdate(filter,update, {runValidators: true});
+			await order.updateOne(update,{runValidators: true});
 
 			res.send("User successfully asign");
+
 		} catch (e) {	
 			res.status(400).send({
-				error: e,
+				error: e.message,
 				message: "Bad Request"
 			});
 		}
