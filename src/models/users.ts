@@ -14,6 +14,7 @@ interface IUserSchema extends Document {
   email: string;
   password: string;
   tokens ? : Types.Array < object > ;
+  devices: Types.Array<string>;
 }
 
 const userSchema = new Schema({
@@ -37,6 +38,9 @@ const userSchema = new Schema({
       type: String,
       required: true
     }
+  }],
+  devices: [{
+    type: String
   }]
 });
 

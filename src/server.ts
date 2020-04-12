@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+dotenv.config()
+
 import express, {Application, Router} from 'express';
 import morgan from 'morgan';
 import compression from 'compression';
@@ -6,12 +8,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import connect from './db/connection';
 
+// import './libs/firebase';
+
 // import routes
 // import indexRoutes from './routes/indexRoutes';
 import UserRoutes from './routes/userRoutes';
 import ProductRoutes from './routes/productRoutes';
-
-dotenv.config()
 
 // Server Class
 class Server {
