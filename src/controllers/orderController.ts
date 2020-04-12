@@ -87,6 +87,7 @@ export default class OrderController {
         const address = nearAddresses[i];
         if (address.user instanceof User) {
           let userOrders = await Order.findOrdersByUser(address.user._id);
+          userOrders = userOrders.filter(order => !order.provider)
           orders.push(...userOrders);
         }
       }
