@@ -84,6 +84,7 @@ export class UserController {
 
       res.send(address.toJSON());
     } catch (err) {
+      console.trace(err);
       res.status(500).send(err);
     }
   }
