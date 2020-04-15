@@ -20,7 +20,7 @@ export default class UserRoutes {
     this.router.post("/login", this.userController.authenticateUser);
     this.router.post('/address', this.auth.Authenticate, this.userController.addAddress);
     this.router.post('/device', this.auth.Authenticate, this.userController.addTokenDevice);
-    this.router.post('/test-push', this.auth.Authenticate, this.userController.testNotification);
+    // this.router.post('/test-push', this.auth.Authenticate, this.userController.testNotification);
 
     this.router.put('/address', this.auth.Authenticate, this.userController.updateAddress);
     this.router.put('/provider', this.auth.Authenticate, this.userController.updateProviderState);
