@@ -7,6 +7,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import connect from './db/connection';
+import exphbs from 'express-handlebars'
 
 // import './libs/firebase';
 
@@ -14,6 +15,9 @@ import connect from './db/connection';
 import UserRoutes from './routes/userRoutes';
 import ProductRoutes from './routes/productRoutes';
 import OrderRoutes from './routes/orderRoutes';
+import indexRoutes  from './routes/index';
+import { pathToFileURL } from 'url';
+import path from 'path';
 
 // Server Class
 class Server {
@@ -27,12 +31,24 @@ class Server {
 
     public config(): void {
         const MONGO_URI:string | undefined = process.env.MONGO_URI;
+        var hbs = exphbs({
+            extname: '.hbs',
+            partialsDir: [
+                path.join(__dirname, 'views/partials')
+            ],
+            layoutsDir: path.join(__dirname, 'views/layouts') 
+        });
 
-        if (typeof MONGO_URI === 'undefined') throw new Error('NO MONGO_URI')
+        if (typeof MONGO_URI === 'undefined') throw new Error('NO MONGO_URI');
 
+        //db connection
         connect(MONGO_URI);
         // Settings
         this.app.set('port', process.env.PORT || 3000);
+        //adding template engine
+        this.app.engine('.hbs', hbs);
+        this.app.set('view engine', '.hbs');
+        this.app.set('views',path.join(__dirname, 'views'));
         // middlewares
         this.app.use(morgan('dev'));
         this.app.use(express.json());
@@ -40,12 +56,14 @@ class Server {
         this.app.use(helmet());
         this.app.use(compression());
         this.app.use(cors());
+
+        this.app.use(express.static(__dirname + 'public/'));
     }
 
     public routes(): void {
         // const router: Router = express.Router();
 
-        this.app.get('/', (req, res) => res.send(true));
+        this.app.get('/', new indexRoutes().router);
         this.app.use('/api/users', new UserRoutes().router);
         this.app.use('/api/products', new ProductRoutes().router);
         this.app.use('/api/orders', new OrderRoutes().router);

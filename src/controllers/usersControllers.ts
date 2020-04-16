@@ -8,9 +8,9 @@ import User, {
 import Address, {
   IAddress
 } from "../models/addresses";
-import Notifications from '../libs/pushNotifications';
+// import Notifications from '../libs/pushNotifications';
 
-const notifications: Notifications = new Notifications();
+// const notifications: Notifications = new Notifications();
 
 export class UserController {
   public async registerUser(req: Request, res: Response): Promise < void > {
@@ -111,35 +111,34 @@ export class UserController {
   public async addTokenDevice(req: Request, res: Response) {
     try {
       let user = req.user!;
-      user.devices?.push(req.body.token);
+      user.devices.push(req.body.token);
       await user.save();
 
       res.status(200).send();
     } catch (err) {
-      console.trace(err);
       res.status(500).send(err);
     }
   }
 
-  public async testNotification(req: Request, res: Response) {
-    try {
-      let user = req.user!;
+  // public async testNotification(req: Request, res: Response) {
+  //   try {
+  //     let user = req.user!;
 
-      if (user.devices.length > 0) {
-        await notifications.sendNotification(user.devices, {
-          notification: {
-            title: 'Test',
-            body: `Hi ${user.fullName}`
-          }
-        }, {});
-        return res.send(true);
-      } else {
-        return res.status(400).send({ message: 'user don\'t have devices' });
-      }
-    } catch (err) {
-      res.status(500).send(err);
-    }
-  }
+  //     if (user.devices.length > 0) {
+  //       await notifications.sendNotification(user.devices, {
+  //         notification: {
+  //           title: 'Test',
+  //           body: `Hi ${user.fullName}`
+  //         }
+  //       }, {});
+  //       return res.send(true);
+  //     } else {
+  //       return res.status(400).send({ message: 'user don\'t have devices' });
+  //     }
+  //   } catch (err) {
+  //     res.status(500).send(err);
+  //   }
+  // }
 
   public async updateProviderState(req: Request, res: Response) {
     try {
