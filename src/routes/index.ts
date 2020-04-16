@@ -15,5 +15,7 @@ export default class indexRouter{
 
 	routes(): void{
 		this.router.get('/', this.indexController.getInfoPage);
+		this.router.get('/login', this.indexController.renderUserLogin);
+
 	}
 }

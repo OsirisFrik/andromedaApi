@@ -38,7 +38,8 @@ export class UserController {
     } catch (e) {
       res.status(400).send();
     }
-	}
+  }
+  
 	public async logout(req: Request, res: Response){
 		try {
 			if(!req.user || !req.user.tokens) throw new Error("Auth");

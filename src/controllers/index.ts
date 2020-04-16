@@ -6,4 +6,12 @@ export default class IndexController{
 			title: 'dashboard'
 		});
 	}
+	public renderUserLogin(req: Request, res: Response){
+		console.log('Users login')
+    res.render('login', {
+      layout: 'login',
+      title: 'login'
+    });
+  }
+
 }
