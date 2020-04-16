@@ -57,7 +57,7 @@ class Server {
         this.app.use(compression());
         this.app.use(cors());
 
-        this.app.use(express.static(__dirname + 'public/'));
+        this.app.use(express.static('public/'));
     }
 
     public routes(): void {
