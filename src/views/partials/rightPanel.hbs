@@ -1,6 +1,5 @@
 
 <!-- Right Panel -->
-
 <div id="right-panel" class="right-panel">
     <!-- Header-->
     <header id="header" class="header">
@@ -27,17 +26,17 @@
                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar">
                     </a>
-
-                    
                 </div>
-
             </div>
         </div>
     </header><!-- /header -->
-    <div class="clearfix"></div>
+    
+    {{> breadcoms}}
+
     {{!-- content --}}
     {{{body}}}
 
+    <div class="clearfix"></div>
     {{> footer}}
 </div>
 <!-- /#right-panel -->

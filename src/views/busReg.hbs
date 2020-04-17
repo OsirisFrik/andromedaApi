@@ -1,0 +1,87 @@
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="images/logo-r.png" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <form action="page-login.html" >
+                    <div class="form-group">
+                        <label >Tipo de Negocio</label>
+                        <div >
+                            <select name="select" id="select" onchange="myFunction()" class="form-control">
+                                
+                                <option value="1">Negocio</option>
+                                <option value="2">Independiente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="dueños"></div>
+                    <div id="registrodueños"  class="regitroduenonegocio"  >
+                        <div class="form-group">
+                            <label>Nombre del Negocio</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label >Area</label>
+                            <div >
+                                <select name="select" id="select" class="form-control">
+
+                                    <option value="1">Restaurantes</option>
+                                    <option value="2">Tiendas Departamentales</option>
+                                    <option value="3">Prueba</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                    </div>    
+                    
+                    <div id="regitrotodos" >
+                        <div class="form-group">
+                            <label>Nombre del representante</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Telefóno</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Electronico</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <input type="password" class="form-control" required>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Aceptar los terminos y politicas
+                            </label>
+                        </div>
+                        <button type="submIndependienteit" class="btn btn-primary btn-flat m-b-30 m-t-30">Registrar</button>
+
+                        <div class="register-link m-t-15 text-center">
+                            <p>Ya tienes una cuenta? <a href="index.html"> Inicia sesión</a></p>
+                        </div>  
+                    </div>          
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./scripts/forms.js"></script>
+
